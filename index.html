@@ -1,0 +1,772 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Shattered Sanctuary — Player's Guide</title>
+<meta name="description" content="The complete player's guide to Shattered Sanctuary, a Discord RPG bot — classes, gear, the Tower, World Boss, Rebirth, and every command." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💀</text></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0b0807;
+    --bg-soft: #120d0b;
+    --surface: #1a130f;
+    --surface-2: #241a15;
+    --border: #35251c;
+    --text: #f0e6dc;
+    --text-muted: #a8968a;
+    --text-faint: #74625a;
+    --accent: #d4622f;
+    --accent-bright: #f0854a;
+    --gold: #e8b23d;
+    --good: #4fbe73;
+    --rarity-common: #9e9e9e;
+    --rarity-uncommon: #2ecc71;
+    --rarity-rare: #3498db;
+    --rarity-epic: #9b59b6;
+    --rarity-legendary: #e67e22;
+    --font-display: 'Cinzel', serif;
+    --font-body: 'Inter', -apple-system, 'Segoe UI', sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+    --sidebar-w: 268px;
+    --radius: 10px;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection { background: var(--accent); color: #14100e; }
+
+  a { color: var(--accent-bright); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  code, .cmd {
+    font-family: var(--font-mono);
+    font-size: 0.86em;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    padding: 0.1em 0.45em;
+    border-radius: 5px;
+    color: var(--gold);
+    white-space: nowrap;
+  }
+
+  h1, h2, h3 { font-family: var(--font-display); font-weight: 600; letter-spacing: 0.01em; text-wrap: balance; }
+
+  .layout { display: flex; min-height: 100vh; }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar {
+    width: var(--sidebar-w);
+    flex: 0 0 var(--sidebar-w);
+    background: var(--bg-soft);
+    border-right: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 22px 16px 40px;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; padding: 4px 8px 18px; }
+  .brand .skull { font-size: 1.6rem; line-height: 1; filter: drop-shadow(0 0 8px rgba(212, 98, 47, 0.5)); }
+  .brand-text { font-family: var(--font-display); font-size: 1.02rem; line-height: 1.15; color: var(--text); }
+  .brand-text small { display: block; font-family: var(--font-body); font-size: 0.68rem; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
+
+  nav.toc { display: flex; flex-direction: column; gap: 1px; }
+  nav.toc a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.86rem;
+    padding: 7px 10px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    border-left: 2px solid transparent;
+  }
+  nav.toc a .ic { width: 1.1em; text-align: center; flex: none; opacity: 0.9; }
+  nav.toc a:hover { background: var(--surface); color: var(--text); }
+  nav.toc a.active { color: var(--accent-bright); background: var(--surface); border-left-color: var(--accent); font-weight: 600; }
+
+  .sidebar-foot { margin-top: 22px; padding: 14px 10px 4px; border-top: 1px solid var(--border); font-size: 0.74rem; color: var(--text-faint); }
+
+  /* ---------- Mobile nav toggle ---------- */
+  .mobile-bar { display: none; }
+  #nav-toggle { display: none; }
+
+  /* ---------- Main content ---------- */
+  main { flex: 1; min-width: 0; }
+  .content-inner { max-width: 860px; margin: 0 auto; padding: 0 28px 100px; }
+
+  .hero {
+    padding: 76px 28px 56px;
+    text-align: center;
+    background:
+      radial-gradient(ellipse 700px 380px at 50% -10%, rgba(212, 98, 47, 0.22) 0%, transparent 65%),
+      radial-gradient(ellipse 900px 400px at 85% 10%, rgba(232, 178, 61, 0.08) 0%, transparent 60%);
+    border-bottom: 1px solid var(--border);
+  }
+  .hero .skull-lg { font-size: 3rem; filter: drop-shadow(0 0 20px rgba(212, 98, 47, 0.45)); }
+  .hero h1 { font-size: clamp(2rem, 5vw, 3rem); margin: 14px 0 10px; color: var(--text); }
+  .hero .lede { max-width: 620px; margin: 0 auto; color: var(--text-muted); font-size: 1.05rem; }
+  .hero .cta {
+    margin-top: 26px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 12px 22px;
+    border-radius: 999px;
+    font-size: 0.95rem;
+  }
+  .hero .cta code { background: transparent; border: none; padding: 0; font-size: 1em; }
+
+  section.doc { padding: 54px 0 8px; border-bottom: 1px solid var(--border); }
+  section.doc:last-of-type { border-bottom: none; }
+  .doc h2 { font-size: 1.5rem; display: flex; align-items: center; gap: 11px; margin: 0 0 6px; color: var(--text); scroll-margin-top: 20px; }
+  .doc h2 .ic { color: var(--accent-bright); }
+  .doc .intro { color: var(--text-muted); font-size: 0.98rem; margin: 0 0 22px; max-width: 640px; }
+  .doc h3 { font-size: 1.02rem; margin: 26px 0 10px; color: var(--gold); }
+  .doc p { margin: 0 0 14px; color: var(--text); }
+  .doc p.muted { color: var(--text-muted); font-size: 0.92rem; }
+  .doc ul, .doc ol { margin: 0 0 14px; padding-left: 1.3em; color: var(--text); }
+  .doc li { margin-bottom: 6px; }
+  .doc li::marker { color: var(--accent); }
+
+  .callout {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin: 4px 0 20px;
+    font-size: 0.92rem;
+    color: var(--text-muted);
+  }
+  .callout strong { color: var(--text); }
+  .callout.gold { border-left-color: var(--gold); }
+
+  /* ---------- Cards / grids ---------- */
+  .grid { display: grid; gap: 14px; margin: 6px 0 20px; }
+  .grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 720px) { .grid.cols-3, .grid.cols-2 { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+  }
+  .card .card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .card .card-emoji { font-size: 1.3rem; }
+  .card .card-title { font-weight: 700; font-size: 1rem; color: var(--text); }
+  .card .card-sub { font-size: 0.84rem; color: var(--accent-bright); margin-bottom: 8px; }
+  .card p { font-size: 0.89rem; color: var(--text-muted); margin: 0; }
+
+  /* ---------- Tables ---------- */
+  .table-wrap { overflow-x: auto; margin: 6px 0 22px; border: 1px solid var(--border); border-radius: var(--radius); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; min-width: 480px; }
+  thead th {
+    text-align: left;
+    background: var(--surface-2);
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  tbody td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; color: var(--text); }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: var(--surface); }
+  td.cmd-cell { font-family: var(--font-mono); color: var(--gold); white-space: nowrap; }
+
+  .rarity-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 7px; }
+
+  .pill { display: inline-flex; align-items: center; gap: 5px; font-size: 0.72rem; font-weight: 600; padding: 3px 9px; border-radius: 999px; background: var(--surface-2); color: var(--text-muted); border: 1px solid var(--border); }
+  .pill.green { color: var(--good); border-color: rgba(79, 190, 115, 0.35); }
+
+  /* ---------- Slot grid ---------- */
+  .slot-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 6px 0 22px; }
+  @media (max-width: 720px) { .slot-grid { grid-template-columns: repeat(2, 1fr); } }
+  .slot { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; text-align: center; }
+  .slot .slot-ic { font-size: 1.5rem; }
+  .slot .slot-name { font-weight: 700; margin: 6px 0 2px; font-size: 0.9rem; }
+  .slot .slot-buff { font-size: 0.8rem; color: var(--accent-bright); }
+
+  /* ---------- Achievement / title category ---------- */
+  .cat-block { margin-bottom: 22px; }
+  .cat-title { font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); margin-bottom: 8px; }
+  .chip-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 0.82rem;
+    max-width: 260px;
+  }
+  .chip .chip-title { font-weight: 700; color: var(--text); display: block; margin-bottom: 2px; }
+  .chip .chip-req { color: var(--text-muted); font-size: 0.78rem; }
+
+  footer.site {
+    text-align: center;
+    padding: 40px 20px 60px;
+    color: var(--text-faint);
+    font-size: 0.82rem;
+  }
+
+  @media (max-width: 900px) {
+    .sidebar {
+      position: fixed;
+      left: 0; top: 0; bottom: 0;
+      z-index: 50;
+      transform: translateX(-100%);
+      transition: transform 0.22s ease;
+      box-shadow: 30px 0 60px rgba(0,0,0,0.5);
+    }
+    #nav-toggle:checked ~ .layout .sidebar { transform: translateX(0); }
+    .mobile-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(11, 8, 7, 0.92);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 16px;
+    }
+    .mobile-bar label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px; height: 34px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      background: var(--surface);
+    }
+    .mobile-bar .mb-title { font-family: var(--font-display); font-size: 0.95rem; }
+    .scrim {
+      display: none;
+      position: fixed; inset: 0; z-index: 45;
+      background: rgba(0,0,0,0.55);
+    }
+    #nav-toggle:checked ~ .layout .scrim { display: block; }
+    .content-inner { padding: 0 18px 80px; }
+    .hero { padding: 44px 18px 40px; }
+  }
+</style>
+</head>
+<body>
+
+<input type="checkbox" id="nav-toggle" />
+
+<div class="mobile-bar">
+  <label for="nav-toggle">☰</label>
+  <span class="mb-title">🪬 Shattered Sanctuary</span>
+</div>
+
+<div class="layout">
+  <label class="scrim" for="nav-toggle"></label>
+
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="skull">💀</span>
+      <span class="brand-text">Shattered Sanctuary<small>Player's Guide</small></span>
+    </div>
+    <nav class="toc" id="toc">
+      <a href="#getting-started"><span class="ic">🗡️</span>Getting Started</a>
+      <a href="#town-hub"><span class="ic">🏘️</span>The Town Hub</a>
+      <a href="#hunt-dungeon"><span class="ic">⚔️</span>Hunt &amp; Dungeon</a>
+      <a href="#gear"><span class="ic">🛡️</span>Gear &amp; Rarity</a>
+      <a href="#uniques"><span class="ic">✨</span>Uniques</a>
+      <a href="#stamina"><span class="ic">⚡</span>Stamina &amp; The Inn</a>
+      <a href="#torment"><span class="ic">🔥</span>Torment</a>
+      <a href="#tower"><span class="ic">🕋</span>The Tower</a>
+      <a href="#adventures"><span class="ic">🗺️</span>Adventures</a>
+      <a href="#world-events"><span class="ic">😈</span>World Boss &amp; Goblin King</a>
+      <a href="#quests"><span class="ic">📋</span>Quest Board</a>
+      <a href="#greedy-mage"><span class="ic">🧙</span>The Greedy Mage</a>
+      <a href="#rebirth"><span class="ic">🌀</span>Rebirth</a>
+      <a href="#gambling-pvp"><span class="ic">🎲</span>Gambler's Den &amp; Arena</a>
+      <a href="#hired-help"><span class="ic">🏕️</span>Recruits &amp; Pets</a>
+      <a href="#referrals-shop"><span class="ic">🎟️</span>Referrals &amp; Shop</a>
+      <a href="#titles"><span class="ic">🏆</span>Titles &amp; Achievements</a>
+      <a href="#commands"><span class="ic">📖</span>Command Reference</a>
+    </nav>
+    <div class="sidebar-foot">Unofficial community guide — not affiliated with Blizzard Entertainment.</div>
+  </aside>
+
+  <main>
+    <div class="hero">
+      <div class="skull-lg">🪬</div>
+      <h1>Shattered Sanctuary</h1>
+      <p class="lede">A full Diablo-inspired RPG, playable entirely through Discord slash commands — no app, no download, nothing to install. This guide covers everything from your first hunt to the endless Tower.</p>
+      <div class="cta">Run <code>/town</code> in Discord to create your hero — you'll be fighting within a minute.</div>
+    </div>
+
+    <div class="content-inner">
+
+      <section class="doc" id="getting-started">
+        <h2><span class="ic">🗡️</span>Getting Started</h2>
+        <p class="intro">Everything begins with one command. No account, no setup — just pick a class and go.</p>
+        <p>Run <code>/town</code> for the first time and you'll be asked to choose a class: Warrior, Mage, or Rogue. Each has exactly one passive ability — there are no skill trees to plan around, so the difference is felt in your very first fight, not buried in a menu. If a friend gave you a referral code, <code>/town</code> also takes a <code>referral</code> option the first time you run it — enter it before picking a class.</p>
+
+        <div class="grid cols-3">
+          <div class="card">
+            <div class="card-head"><span class="card-emoji">⚔️</span><span class="card-title">Warrior</span></div>
+            <div class="card-sub">Iron Skin — takes 20% less damage from every hit</div>
+            <p>Thick skin, heavy hits. Hard to kill, simple to play.</p>
+          </div>
+          <div class="card">
+            <div class="card-head"><span class="card-emoji">🔥</span><span class="card-title">Mage</span></div>
+            <div class="card-sub">Arcane Might — deals 10% more damage with every attack</div>
+            <p>Highest damage output. Squishier than the rest, but hits hard enough to matter.</p>
+          </div>
+          <div class="card">
+            <div class="card-head"><span class="card-emoji">🗡️</span><span class="card-title">Rogue</span></div>
+            <div class="card-sub">Deathmark — 25% chance to land a critical hit for double damage</div>
+            <p>Balanced and unpredictable. Every hit might be a crit.</p>
+          </div>
+        </div>
+
+        <p class="muted">Class choice is permanent unless you delete your character with <code>/reset</code> and start fresh — there's no respec. Once you've created a hero, <code>/town</code> always takes you straight to the hub instead of the class picker.</p>
+      </section>
+
+      <section class="doc" id="town-hub">
+        <h2><span class="ic">🏘️</span>The Town Hub</h2>
+        <p class="intro"><code>/town</code> is home base — every system in the game branches out from here, and it always shows your live Stamina bar, Gold, and current Torment setting up top.</p>
+
+        <h3>Main rows</h3>
+        <ul>
+          <li><strong>Activities</strong> — Hunt, Dungeon, Tower, Adventure</li>
+          <li><strong>Services</strong> — Shops, Quest Board, Arena</li>
+          <li><strong>Encounters</strong> — Mage, World Boss, Torment</li>
+          <li><strong>You</strong> — Profile, Achievements</li>
+          <li><strong>Info</strong> — Leaderboard, Help</li>
+        </ul>
+
+        <h3>The Shops sub-hub</h3>
+        <p>The Shops button opens six more destinations: the gear/potion Shop, the Gambler's Den, the Recruitment Center, the Enchanter, Pet care, and the Inn.</p>
+
+        <p class="muted">A "Return to Town" button appears on nearly every screen, so you're never more than one click from the hub.</p>
+      </section>
+
+      <section class="doc" id="hunt-dungeon">
+        <h2><span class="ic">⚔️</span>Hunt &amp; Dungeon</h2>
+        <p class="intro">These are the two core loops — quick fights that pay out XP, gold, and gear.</p>
+
+        <div class="grid cols-2">
+          <div class="card">
+            <div class="card-head"><span class="card-emoji">🗡️</span><span class="card-title">/hunt</span></div>
+            <p>One fight against a random monster. Costs 1 stamina, always. Can drop gear (any slot), a Horadric Shard, a Stamina Gem or Potion, or a Stone of Jordan — and rarely a Treasure Goblin or a tougher hunt boss shows up instead of a normal monster. Hunt loot never rolls legendary rarity — that's a dungeon-only reward.</p>
+          </div>
+          <div class="card">
+            <div class="card-head"><span class="card-emoji">🏰</span><span class="card-title">/dungeon</span></div>
+            <p>Three waves plus a boss, back to back — your HP carries over between fights with no healing in between, so a rough wave 1 can cost you the whole run. Costs more stamina than a hunt, and more again at higher Torment (check your own <code>/profile</code> for your exact cost). Can drop gear of any rarity, including legendary and boss-specific Uniques.</p>
+          </div>
+        </div>
+
+        <h3>Loot decisions</h3>
+        <p>Every gear drop shows what you'd be trading up (or down) from and asks you to <strong>Equip</strong> or <strong>Scrap for gold</strong> — your call either way. The button that's actually the smarter pick lights up green so it's obvious at a glance, but nothing is ever forced on you.</p>
+      </section>
+
+      <section class="doc" id="gear">
+        <h2><span class="ic">🛡️</span>Gear &amp; Rarity</h2>
+        <p class="intro">Four slots, five rarities, and a permanent tier system on top of both.</p>
+
+        <div class="slot-grid">
+          <div class="slot"><div class="slot-ic">🗡️</div><div class="slot-name">Weapon</div><div class="slot-buff">Attack</div></div>
+          <div class="slot"><div class="slot-ic">🛡️</div><div class="slot-name">Armor</div><div class="slot-buff">Defense</div></div>
+          <div class="slot"><div class="slot-ic">💠</div><div class="slot-name">Ring</div><div class="slot-buff">Max Stamina</div></div>
+          <div class="slot"><div class="slot-ic">📿</div><div class="slot-name">Necklace</div><div class="slot-buff">Luck</div></div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Rarity</th><th></th></tr></thead>
+            <tbody>
+              <tr><td><span class="rarity-dot" style="background:var(--rarity-common)"></span>Common</td><td>The baseline every drop starts from.</td></tr>
+              <tr><td><span class="rarity-dot" style="background:var(--rarity-uncommon)"></span>Uncommon</td><td>A modest step up.</td></tr>
+              <tr><td><span class="rarity-dot" style="background:var(--rarity-rare)"></span>Rare</td><td>Noticeably stronger.</td></tr>
+              <tr><td><span class="rarity-dot" style="background:var(--rarity-epic)"></span>Epic</td><td>A real prize when it drops.</td></tr>
+              <tr><td><span class="rarity-dot" style="background:var(--rarity-legendary)"></span>Legendary</td><td>The top tier — dungeon-only, and rare even there.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Gear tiers (+1 to +4)</h3>
+        <p>Stacked on top of rarity rather than replacing it — a permanent boost the <strong>Enchanter</strong> (<code>/enchant</code>) can push higher on gear you already own. Each tier is gated behind having unlocked the matching Torment level, and the screen tells you exactly what you need. Max tier is +4.</p>
+
+        <h3>Horadric Shards &amp; Fragments</h3>
+        <p>A Horadric Shard instantly upgrades your <em>weakest</em> equipped slot to the next rarity tier the moment it drops from a hunt or dungeon — no decision needed. Adventures pay out <strong>Fragments</strong> instead of whole Shards; collect enough and the Enchanter lets you choose which slot to spend the assembled Shard on, instead of it always hitting your weakest.</p>
+      </section>
+
+      <section class="doc" id="uniques">
+        <h2><span class="ic">✨</span>Uniques</h2>
+        <p class="intro">Each dungeon boss (and Diablo himself) can drop its own signature weapon or armor — legendary stats plus a permanent combat passive found nowhere else. Weapon and armor only; rings and necklaces stay non-combat. Like any drop, a Unique is always your own Equip-or-Scrap choice, never automatic.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Unique</th><th>Slot</th><th>Passive</th><th>Drops from</th></tr></thead>
+            <tbody>
+              <tr><td>The Butcher's Cleaver</td><td>Weapon</td><td>+5% damage dealt</td><td>The Butcher</td></tr>
+              <tr><td>Raven's Talon</td><td>Weapon</td><td>+4% critical hit chance</td><td>Blood Raven</td></tr>
+              <tr><td>Countess' Shroud</td><td>Armor</td><td>-5% damage taken, heals 8% max HP between dungeon waves</td><td>The Countess</td></tr>
+              <tr><td>Andariel's Carapace</td><td>Armor</td><td>-6% damage taken</td><td>Andariel, Maiden of Anguish</td></tr>
+              <tr><td>Harbinger's Edge</td><td>Weapon</td><td>A killing blow strikes before the enemy can retaliate</td><td>Andariel, Maiden of Anguish</td></tr>
+              <tr><td>Diablo's Fang</td><td>Weapon</td><td>+6% damage dealt</td><td>The World Boss (Diablo)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="muted">Andariel can drop either of her two signature items on a given kill, chosen at random.</p>
+      </section>
+
+      <section class="doc" id="stamina">
+        <h2><span class="ic">⚡</span>Stamina &amp; The Inn</h2>
+        <p class="intro">Stamina replaces cooldowns entirely — it's the one resource every action spends.</p>
+        <p>You start with 8 max stamina, and your max grows by 1 every level. It regenerates on its own over time, getting faster the higher your level — your exact "+1 in X minutes" countdown is always visible on <code>/profile</code>.</p>
+
+        <div class="grid cols-2">
+          <div class="card">
+            <div class="card-head"><span class="card-emoji">🧪</span><span class="card-title">Stamina Potion</span></div>
+            <p>Restores 5 stamina instantly — or converts to gold on the spot if you're already full, so it's never wasted.</p>
+          </div>
+          <div class="card">
+            <div class="card-head"><span class="card-emoji">💎</span><span class="card-title">Stamina Gem</span></div>
+            <p>Permanently raises your max stamina by 1. One socket per gear piece, so four is the cap.</p>
+          </div>
+        </div>
+
+        <h3>The Inn</h3>
+        <p>Can't wait for regen? <code>/inn</code> lets you pay gold to fast-track it — priced by how much stamina you're actually missing, not a flat fee. It's not instant either; you're booking a stay, and your stamina arrives after a wait shown live once you check in.</p>
+      </section>
+
+      <section class="doc" id="torment">
+        <h2><span class="ic">🔥</span>Torment</h2>
+        <p class="intro">An optional difficulty dial — <code>/torment</code> — that trades risk for reward.</p>
+        <p>Six settings, Normal through Torment 5, unlocking gradually as you level. Your own <code>/torment</code> screen always shows exactly when your next tier becomes available. Every step up makes hunt and dungeon monsters (including dungeon bosses) tougher, and pays out more XP and gold in return.</p>
+        <ul>
+          <li>Hunt's stamina cost never changes with Torment, but its Horadric Shard chance climbs the higher you go.</li>
+          <li>Dungeon's stamina cost increases by 1 for every Torment level on top of the base cost.</li>
+          <li>The World Boss is unaffected by your Torment setting — it already scales with your whole party.</li>
+        </ul>
+      </section>
+
+      <section class="doc" id="tower">
+        <h2><span class="ic">🕋</span>The Tower</h2>
+        <p class="intro"><code>/tower</code> — a solo, single-run climb with no ceiling and no way to bank progress mid-run.</p>
+        <p>One battle per floor, HP carrying over just like a dungeon's waves — except the Tower never stops getting harder. There is no death penalty: losing costs you nothing, unlike a dungeon defeat. There's also no XP, gold, or loot at any point — the Tower pays in bragging rights only. Your best floor ever is saved permanently and feeds the <strong>Tower Leaderboard</strong>. A climb costs stamina once, not per floor.</p>
+        <div class="callout">Beat your own personal best and the whole server hears about it — a fresh record posts publicly with your new leaderboard rank.</div>
+      </section>
+
+      <section class="doc" id="adventures">
+        <h2><span class="ic">🗺️</span>Adventures</h2>
+        <p class="intro"><code>/adventure</code> sends your hero out on their own, away from you for a while.</p>
+        <p>Starting one commits <em>all</em> of your current stamina at once — you'll see roughly what fraction of a full payout that represents before you commit. Hunt, Dungeon, and Tower are locked while your hero is away (everything else in Town still works fine), and there's no canceling once they've left. When they're back, you'll collect XP, gold, and a chance at a Horadric Shard Fragment, scaled by how much stamina you sent them out with.</p>
+        <p>You won't know exactly how long they'll be gone until they've actually left — from that point on, a live countdown shows how much longer to wait. Flip on the <strong>Return Ping</strong> toggle and the bot will DM-ping you the moment they're back, so you don't have to keep checking.</p>
+      </section>
+
+      <section class="doc" id="world-events">
+        <h2><span class="ic">😈</span>World Boss &amp; Goblin King</h2>
+        <p class="intro">Two server-wide events, both party-based, both triggered by everyone's play adding up together.</p>
+
+        <div class="grid cols-2">
+          <div class="card">
+            <div class="card-head"><span class="card-emoji">😈</span><span class="card-title">Diablo, Lord of Terror</span></div>
+            <p><strong>Stones of Jordan</strong> — a rare drop from hunts and dungeons — count toward a server-wide total, tracked live in <code>/worldboss</code>. The moment the count is hit, Diablo spawns immediately, no warning. Up to 4 heroes can party up and take him on for XP, gold, gear, and a shot at his exclusive Unique, Diablo's Fang. A loss costs nothing — World Boss defeats are free, unlike a dungeon death. A "Notify Me" button lets you opt into a ping for the next spawn.</p>
+          </div>
+          <div class="card">
+            <div class="card-head"><span class="card-emoji">👑</span><span class="card-title">The Treasure Goblin King</span></div>
+            <p>Every Treasure Goblin actually defeated (from a hunt or a dungeon) counts toward a second, lighter server-wide total. Hitting it summons the King immediately — trivially easy, gold-only reward, and bringing more friends means more gold each, not a smaller split. No death penalty here either.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="doc" id="quests">
+        <h2><span class="ic">📋</span>Quest Board</h2>
+        <p class="intro"><code>/questboard</code> — a rotating set of gold-paying objectives.</p>
+        <p>Four daily objectives reset every 24 hours: <strong>Win hunts</strong>, <strong>Clear dungeons</strong>, <strong>Spend gold</strong>, and <strong>Play the Gambler's Den</strong>. One weekly objective (drawn from that same pool) resets every 7 days and pays out more. Every quest shows a live progress bar and its gold reward, plus a countdown to the next reset. Clearing every daily objective several days running builds a streak, shown right on the board — keep it going for a little extra gold on top.</p>
+      </section>
+
+      <section class="doc" id="greedy-mage">
+        <h2><span class="ic">🧙</span>The Greedy Mage</h2>
+        <p class="intro"><code>/mage</code> — a pure gold sink with no payoff for the donor, on purpose.</p>
+        <p>Give the Mage gold and it's gone — nothing comes back to you personally. What it does instead is build toward a server-wide reward: once the community's running total (shown live) crosses its threshold, <strong>Mother's Blessing</strong> activates for everyone — <strong>+50% gold and XP</strong> on every hunt, dungeon, and World Boss kill, for as long as it's active. Both the start and the end of a Blessing post as public announcements, so you'll always know when one's running and how long is left. Gold lost to a death penalty, or surrendered when you Rebirth, also feeds the same total — so even a rough run isn't entirely wasted for the server.</p>
+      </section>
+
+      <section class="doc" id="rebirth">
+        <h2><span class="ic">🌀</span>Rebirth</h2>
+        <p class="intro">The endgame reset — trade your progress for a permanent edge and start climbing again.</p>
+        <p>Once you've reached the level shown on your own <code>/profile</code>, a Rebirth option appears there. Confirming trades your character back to level 1 in exchange for a permanent boost to XP gain and base combat stats — bigger with each Rebirth, but by less every time, so it never fully replaces playing the game normally.</p>
+        <div class="grid cols-2">
+          <div class="card">
+            <div class="card-head"><span class="card-emoji">📉</span><span class="card-title">You lose</span></div>
+            <p>Your level, all equipped gear (and its tiers/gems), your mercenary, your Torment setting, and any Horadric Shard Fragments. Your gold is surrendered to the Greedy Mage.</p>
+          </div>
+          <div class="card">
+            <div class="card-head"><span class="card-emoji">📌</span><span class="card-title">You keep</span></div>
+            <p>Your pet (at its current tier) and every lifetime record — hunts won, dungeons cleared, Tower best floor, duel record, Goblin King kills, gold donated, referrals, and every achievement and title you've earned.</p>
+          </div>
+        </div>
+        <p class="muted">Permanent, with no undo — the confirmation screen shows your exact current and next-Rebirth numbers before you commit.</p>
+      </section>
+
+      <section class="doc" id="gambling-pvp">
+        <h2><span class="ic">🎲</span>Gambler's Den &amp; Arena</h2>
+        <p class="intro">Two ways to wager gold against the house — or against another hero.</p>
+
+        <div class="grid cols-2">
+          <div class="card">
+            <div class="card-head"><span class="card-emoji">🪙</span><span class="card-title">Coin Flip — /gamble</span></div>
+            <p>Wager gold on a flip. Win, and you double it; lose, and it's gone.</p>
+          </div>
+          <div class="card">
+            <div class="card-head"><span class="card-emoji">🔮</span><span class="card-title">Seer's Wheel — /guessnumber</span></div>
+            <p>Guess a number from 1 to 10 — genuine 1-in-10 odds. Guess right and your wager quadruples.</p>
+          </div>
+        </div>
+
+        <h3>The Arena — /duel</h3>
+        <p>Challenge another hero to a wagered fight. You each pick one of three moves in secret — <strong>Attack beats Magic, Magic beats Block, Block beats Attack</strong> — and both picks stay hidden until the target accepts and locks theirs in too. An unanswered challenge expires after 24 hours with nothing lost.</p>
+        <p>It isn't a coin flip <em>or</em> a guaranteed win: your move choice and how your character compares to theirs both nudge the odds, but the underdog always has a real shot. The result screen always shows your exact odds for that specific fight after it resolves. Winner takes the whole pot — both wagers combined.</p>
+      </section>
+
+      <section class="doc" id="hired-help">
+        <h2><span class="ic">🏕️</span>Recruits &amp; Pets</h2>
+
+        <h3>Recruitment Center — /recruit</h3>
+        <p>Hire a mercenary for a temporary combat edge — the exact bonus is always shown live before you hire. It isn't permanent: each merc is good for a limited number of hunts and dungeons before they move on, and hiring a replacement while one's still active drops the old one with no refund for unused charges.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Mercenary</th><th>What they bring</th></tr></thead>
+            <tbody>
+              <tr><td>🏹 Rogue Scout</td><td>Bonus critical hit chance</td></tr>
+              <tr><td>🛡️ Iron Guard</td><td>Reduced damage taken</td></tr>
+              <tr><td>🔮 Battle Mage</td><td>Increased damage dealt</td></tr>
+              <tr><td>⚕️ Field Medic</td><td>Heals a chunk of HP between dungeon waves</td></tr>
+              <tr><td>🍀 Fortune Seeker</td><td>Boosts what Luck does for your drops and Treasure Goblin odds</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Pets — /pet</h3>
+        <p>Purely cosmetic — every pet earns gold at the same passive rate just by existing, no fighting or stamina involved, so pick whichever one you like. Gold stockpiles while you're away until you collect it in person, capped at a maximum. Upgrading a pet (up to tier 5) raises that cap, not how fast it earns.</p>
+        <div class="chip-list">
+          <span class="chip"><span class="chip-title">🐺 Shadow Hound</span><span class="chip-req">A loyal wolf that shadows your steps, snatching up stray coin as you travel.</span></span>
+          <span class="chip"><span class="chip-title">👹 Coin Imp</span><span class="chip-req">A small imp with a nose for gold and absolutely no interest in a fight.</span></span>
+          <span class="chip"><span class="chip-title">🦇 Cave Bat</span><span class="chip-req">Flits through the dark corners of the Sanctuary, dropping whatever it finds.</span></span>
+          <span class="chip"><span class="chip-title">🐦‍⬛ Carrion Crow</span><span class="chip-req">Picks the battlefield clean of coin long after you've moved on.</span></span>
+          <span class="chip"><span class="chip-title">🐍 Sand Viper</span><span class="chip-req">Burrows into forgotten ruins and drags back whatever glitters.</span></span>
+        </div>
+      </section>
+
+      <section class="doc" id="referrals-shop">
+        <h2><span class="ic">🎟️</span>Referrals &amp; Shop</h2>
+
+        <h3>Bring a friend</h3>
+        <p>Your personal referral code is shown on your own <code>/profile</code>. Share it, and when a friend enters it the first time they run <code>/town</code> and later reaches level 5, you get <strong>500 gold</strong> — up to 5 friends per referrer. Your profile tracks exactly how many of those five you've earned so far.</p>
+
+        <h3>The Shop — /shop</h3>
+        <p>Spend gold instead of waiting on drops: a gear roll for any slot (priced the same across weapon/armor/ring/necklace, scaling with your level), Stamina Potions, and Stamina Gems. Every price is shown live before you buy, with a confirmation step since purchases can't be undone.</p>
+      </section>
+
+      <section class="doc" id="titles">
+        <h2><span class="ic">🏆</span>Titles &amp; Achievements</h2>
+        <p class="intro">Two separate systems for tracking what you've done — one that shows off, one that's just for you.</p>
+        <p><strong>Titles</strong> display your single best-earned one automatically on <code>/profile</code>, or you can pin a specific unlocked title instead if you'd rather show off an older one. <strong>Achievements</strong> (<code>/achievements</code>) are a full checklist instead — every entry visible whether you've earned it or not, grouped by category.</p>
+
+        <h3>Titles, in unlock order</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Title</th><th>Requirement</th></tr></thead>
+            <tbody>
+              <tr><td>Novice Hero</td><td>Automatic — welcome to the Sanctuary.</td></tr>
+              <tr><td>Century Hunter</td><td>Win 100 hunts.</td></tr>
+              <tr><td>Dungeon Delver</td><td>Clear 50 dungeons.</td></tr>
+              <tr><td>Arena Champion</td><td>Win 10 duels.</td></tr>
+              <tr><td>Battle-Scarred</td><td>Lose 10 duels.</td></tr>
+              <tr><td>Recruiter</td><td>Get 3 referred friends to level 5.</td></tr>
+              <tr><td>Legendarily Geared</td><td>Equip a legendary weapon, armor, ring, or necklace.</td></tr>
+              <tr><td>Unique Bearer</td><td>Equip a unique weapon or armor.</td></tr>
+              <tr><td>Torment Master</td><td>Reach the highest Torment level.</td></tr>
+              <tr><td>Demon Slayer</td><td>Defeat the World Boss once.</td></tr>
+              <tr><td>King Slayer</td><td>Defeat the Treasure Goblin King 10 times.</td></tr>
+              <tr><td>Devoted Patron</td><td>Donate 5,000 gold to the Greedy Mage.</td></tr>
+              <tr><td>Grinder</td><td>Win 500 hunts.</td></tr>
+              <tr><td>Vault Breaker</td><td>Clear 200 dungeons.</td></tr>
+              <tr><td>Butcher of Kings</td><td>Defeat the Treasure Goblin King 50 times.</td></tr>
+              <tr><td>Herald of the End</td><td>Defeat the World Boss 10 times.</td></tr>
+              <tr><td>Tower Conqueror</td><td>Reach floor 50 in the Tower.</td></tr>
+              <tr><td>Reborn</td><td>Rebirth once.</td></tr>
+              <tr><td>Cycle Walker</td><td>Rebirth 5 times.</td></tr>
+              <tr><td>First Nephilim</td><td>Can't be earned — a one-time thank-you to early players.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Achievements, by category</h3>
+
+        <div class="cat-block">
+          <div class="cat-title">Hunts</div>
+          <div class="chip-list">
+            <span class="chip"><span class="chip-title">Blooded</span><span class="chip-req">Win 10 hunts.</span></span>
+            <span class="chip"><span class="chip-title">Seasoned Hunter</span><span class="chip-req">Win 50 hunts.</span></span>
+            <span class="chip"><span class="chip-title">Century Hunter</span><span class="chip-req">Win 100 hunts.</span></span>
+            <span class="chip"><span class="chip-title">Relentless</span><span class="chip-req">Win 500 hunts.</span></span>
+            <span class="chip"><span class="chip-title">Living Legend</span><span class="chip-req">Win 1,000 hunts.</span></span>
+          </div>
+        </div>
+        <div class="cat-block">
+          <div class="cat-title">Dungeons</div>
+          <div class="chip-list">
+            <span class="chip"><span class="chip-title">First Descent</span><span class="chip-req">Clear 5 dungeons.</span></span>
+            <span class="chip"><span class="chip-title">Delver</span><span class="chip-req">Clear 25 dungeons.</span></span>
+            <span class="chip"><span class="chip-title">Dungeon Delver</span><span class="chip-req">Clear 50 dungeons.</span></span>
+            <span class="chip"><span class="chip-title">Master Delver</span><span class="chip-req">Clear 100 dungeons.</span></span>
+          </div>
+        </div>
+        <div class="cat-block">
+          <div class="cat-title">Growth</div>
+          <div class="chip-list">
+            <span class="chip"><span class="chip-title">Rising Hero</span><span class="chip-req">Reach level 10.</span></span>
+            <span class="chip"><span class="chip-title">Veteran</span><span class="chip-req">Reach level 20.</span></span>
+            <span class="chip"><span class="chip-title">Battle-Hardened</span><span class="chip-req">Reach level 30.</span></span>
+          </div>
+        </div>
+        <div class="cat-block">
+          <div class="cat-title">Torment</div>
+          <div class="chip-list">
+            <span class="chip"><span class="chip-title">Into the Fire</span><span class="chip-req">Unlock Torment 1.</span></span>
+            <span class="chip"><span class="chip-title">Torment Master</span><span class="chip-req">Reach the highest Torment level.</span></span>
+          </div>
+        </div>
+        <div class="cat-block">
+          <div class="cat-title">Gear</div>
+          <div class="chip-list">
+            <span class="chip"><span class="chip-title">Legendarily Geared</span><span class="chip-req">Equip a legendary-rarity item.</span></span>
+            <span class="chip"><span class="chip-title">Unique Bearer</span><span class="chip-req">Equip a boss-forged unique.</span></span>
+            <span class="chip"><span class="chip-title">Fully Enchanted</span><span class="chip-req">Reach max tier on any gear slot.</span></span>
+            <span class="chip"><span class="chip-title">Fully Socketed</span><span class="chip-req">Socket the maximum number of Stamina Gems.</span></span>
+          </div>
+        </div>
+        <div class="cat-block">
+          <div class="cat-title">Tower</div>
+          <div class="chip-list">
+            <span class="chip"><span class="chip-title">First Steps</span><span class="chip-req">Reach floor 5 of the Tower.</span></span>
+            <span class="chip"><span class="chip-title">Steady Climber</span><span class="chip-req">Reach floor 15 of the Tower.</span></span>
+            <span class="chip"><span class="chip-title">Sky Piercer</span><span class="chip-req">Reach floor 30 of the Tower.</span></span>
+            <span class="chip"><span class="chip-title">Tower Conqueror</span><span class="chip-req">Reach floor 50 of the Tower.</span></span>
+          </div>
+        </div>
+        <div class="cat-block">
+          <div class="cat-title">World Boss</div>
+          <div class="chip-list">
+            <span class="chip"><span class="chip-title">Demon Slayer</span><span class="chip-req">Defeat Diablo once.</span></span>
+            <span class="chip"><span class="chip-title">Diablo's Bane</span><span class="chip-req">Defeat Diablo 5 times.</span></span>
+            <span class="chip"><span class="chip-title">Hell's Nightmare</span><span class="chip-req">Defeat Diablo 10 times.</span></span>
+            <span class="chip"><span class="chip-title">Goblin Hunter</span><span class="chip-req">Defeat the Treasure Goblin King once.</span></span>
+            <span class="chip"><span class="chip-title">King Slayer</span><span class="chip-req">Defeat the Treasure Goblin King 10 times.</span></span>
+            <span class="chip"><span class="chip-title">Hoard's End</span><span class="chip-req">Defeat the Treasure Goblin King 25 times.</span></span>
+          </div>
+        </div>
+        <div class="cat-block">
+          <div class="cat-title">Community</div>
+          <div class="chip-list">
+            <span class="chip"><span class="chip-title">Generous Soul</span><span class="chip-req">Give 1,000 lifetime gold to the Greedy Mage.</span></span>
+            <span class="chip"><span class="chip-title">Recruiter</span><span class="chip-req">Bring a friend through the gate who reaches level 5.</span></span>
+            <span class="chip"><span class="chip-title">Master Recruiter</span><span class="chip-req">Earn the referral reward from every friend it can pay out for.</span></span>
+            <span class="chip"><span class="chip-title">Pet Whisperer</span><span class="chip-req">Upgrade a pet to its max tier.</span></span>
+          </div>
+        </div>
+      </section>
+
+      <section class="doc" id="commands">
+        <h2><span class="ic">📖</span>Command Reference</h2>
+        <p class="intro">Every player-facing slash command, in one place.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td class="cmd-cell">/town</td><td>Open the town hub — hunt, dungeon, shop, gamble, and more, all in one place.</td></tr>
+              <tr><td class="cmd-cell">/hunt</td><td>Fight a random monster for XP, gold, and a chance at loot. Costs 1 stamina.</td></tr>
+              <tr><td class="cmd-cell">/dungeon</td><td>Fight through 3 waves and a boss for bigger rewards. Costs more stamina, scaling with Torment.</td></tr>
+              <tr><td class="cmd-cell">/tower</td><td>Climb the Tower one floor at a time — it never stops getting harder.</td></tr>
+              <tr><td class="cmd-cell">/adventure</td><td>Send your hero out on their own, spending all your stamina — or collect one that's back.</td></tr>
+              <tr><td class="cmd-cell">/profile</td><td>View your character sheet, or someone else's.</td></tr>
+              <tr><td class="cmd-cell">/showoff</td><td>Post your character sheet publicly for the server to see.</td></tr>
+              <tr><td class="cmd-cell">/leaderboard</td><td>See the strongest heroes in the Sanctuary.</td></tr>
+              <tr><td class="cmd-cell">/public-leaderboard</td><td>Post the leaderboard publicly, for the whole channel to see.</td></tr>
+              <tr><td class="cmd-cell">/shop</td><td>Spend gold on a weapon or armor roll instead of waiting for a drop.</td></tr>
+              <tr><td class="cmd-cell">/gamble</td><td>Wager gold at the Gambler's Den — double it, or lose it.</td></tr>
+              <tr><td class="cmd-cell">/guessnumber</td><td>The Seer's Wheel — guess 1-10 to quadruple your gold, or lose the bet.</td></tr>
+              <tr><td class="cmd-cell">/worldboss</td><td>Check the Stone of Jordan counter, or join the fight if Diablo's been summoned.</td></tr>
+              <tr><td class="cmd-cell">/torment</td><td>Opt into a harder difficulty for bigger rewards. Unlocks gradually by level.</td></tr>
+              <tr><td class="cmd-cell">/questboard</td><td>Check today's objectives and claim your rewards.</td></tr>
+              <tr><td class="cmd-cell">/recruit</td><td>Hire a mercenary from the Recruitment Center for a temporary combat bonus.</td></tr>
+              <tr><td class="cmd-cell">/enchant</td><td>Visit the Enchanter to push a gear tier higher on gear you already own.</td></tr>
+              <tr><td class="cmd-cell">/pet</td><td>Adopt a pet that gathers gold on its own, or check what yours has stockpiled.</td></tr>
+              <tr><td class="cmd-cell">/inn</td><td>Pay to fast-track your stamina regen, priced by how much you need.</td></tr>
+              <tr><td class="cmd-cell">/duel</td><td>Challenge another hero to Attack/Block/Magic — winner takes the gold wager.</td></tr>
+              <tr><td class="cmd-cell">/mage</td><td>Visit the Greedy Mage — give gold toward the server's next Mother's Blessing.</td></tr>
+              <tr><td class="cmd-cell">/achievements</td><td>See your full achievement checklist — unlocked and locked alike.</td></tr>
+              <tr><td class="cmd-cell">/reset</td><td>Permanently delete your character and start over. Requires confirmation.</td></tr>
+              <tr><td class="cmd-cell">/help</td><td>Explains how to play, privately.</td></tr>
+              <tr><td class="cmd-cell">/publichelp</td><td>Posts the how-to-play guide publicly, for the whole channel to see.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+
+    <footer class="site">
+      Shattered Sanctuary is an unofficial, Diablo-inspired fan project built entirely for Discord. Not affiliated with or endorsed by Blizzard Entertainment.
+    </footer>
+  </main>
+</div>
+
+<script>
+  // Close the mobile nav when a link is tapped.
+  document.getElementById('toc').addEventListener('click', (e) => {
+    if (e.target.closest('a')) document.getElementById('nav-toggle').checked = false;
+  });
+
+  // Highlight the current section in the sidebar as you scroll.
+  const sections = [...document.querySelectorAll('section.doc[id]')];
+  const links = new Map([...document.querySelectorAll('#toc a')].map((a) => [a.getAttribute('href').slice(1), a]));
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        const link = links.get(entry.target.id);
+        if (!link) continue;
+        if (entry.isIntersecting) {
+          links.forEach((l) => l.classList.remove('active'));
+          link.classList.add('active');
+        }
+      }
+    },
+    { rootMargin: '-15% 0px -70% 0px', threshold: 0 }
+  );
+  sections.forEach((s) => observer.observe(s));
+</script>
+</body>
+</html>
